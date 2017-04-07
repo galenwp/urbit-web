@@ -5,7 +5,6 @@
     <script src="/~~/~/at/=home=/web/lib/js/urb.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
     <script src="/~~/=home=/web/tutorial/tutorial.js"></script>
-    <link href="/~~/=home=/web/tutorial/tutorial.css" rel="stylesheet" />
 
 </head>
 
@@ -17,30 +16,7 @@
   </div>
 
   <div>
-      <input type="text" id="fetchBox" size="80" placeholder="~zod">Fetch
-      <br />
-      <button onclick='fetch();'>Fetch</button>
-      <br />
-  </div>
-
-  <br />
-
-  <div>
-      <button id="subscribeButton" class="hidden" onclick='subscribe();'>Subscribe</button>
-      <br />
-  </div>
-
-  <br />
-
-  <div>
-      <button id="unsubscribeButton" class="hidden" onclick='unsubscribe();'>Unsubscribe</button>
-      <br />
-  </div>
-
-  <br />
-
-  <div>
-      <input id="postBox" type="text" class="hidden" size="80" value="">Text
+      <input id="postBox" type="text" size="80" value="">Text
       <br />
       <button id="postButton" onclick='sendPost();'>Post</button>
       <br />
@@ -52,11 +28,7 @@
   </div>
 
   <script>
-    if (!(window.location.search)) {
-      document.getElementById('shipDisplay').innerHTML = '~' + window.urb.user;
-    } else {
-      document.getElementById('shipDisplay').innerHTML = '~' + window.location.search.substring(7); // XX
-    }
+    document.getElementById('shipDisplay').innerHTML = '~' + window.urb.user;
   </script>
 
 
