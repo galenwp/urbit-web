@@ -42,7 +42,6 @@ function loadCabal(cabal) {
 function loadGrams(grams) {
   var oldPosts = document.getElementById('posts').innerHTML;
   var newPosts = '';
-  document.getElementById('loading').classList.add('hidden');
   grams.tele.slice().reverse().forEach(function showGram(gram) { // grams are array; display new 1st
     var textDiv = document.createElement('div');
     textDiv.innerText = gram.thought.statement.speech.lin.txt;
