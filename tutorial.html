@@ -1,37 +1,29 @@
-<head>
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Urbit from the Web</title>
 
     <script src="/~~/~/at/=home=/web/lib/js/urb.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
     <script src="/~~/=home=/web/tutorial/tutorial.js"></script>
+  </head>
 
-</head>
-
-<body>
-
-  <div>
+  <body>
+    <div>
       <h1 id="shipDisplay"></h1>
-      <br />
-  </div>
+    </div>
+    <br />
 
-  <div>
+    <div>
       <input id="postBox" type="text" size="80" value="">Text
       <br />
       <button id="postButton" onclick='sendPost();'>Post</button>
-      <br />
-  </div>
+    </div>
 
-  <br />
-
-  <div id="posts">
-  </div>
-
-  <script>
-    document.getElementById('shipDisplay').innerHTML = '~' + window.urb.user;
-  </script>
-
-
-</body>
-
+    <script>
+      document.getElementById('shipDisplay').innerHTML = '~' + window.urb.user;
+    </script>
+  </body>
 </html>
