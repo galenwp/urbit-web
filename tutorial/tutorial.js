@@ -2,6 +2,17 @@
 
 // util
 
+function mainStation(user) {
+  switch (user.length) {
+    case 3:
+      return 'court';
+    case 6:
+      return 'floor';
+    default:
+      return 'porch';
+  }
+}
+
 function uuid32() {                                     // generate unique serial number
   var i;
   var digitGroup;
@@ -45,7 +56,7 @@ function sendPost() {
   document.getElementById('postButton').disabled = true;
 
   text = document.getElementById('postBox').value;
-  station = '~' + window.urb.user + '/public';
+  station = '~' + window.urb.user + '/' + mainStation(window.urb.user);
 
   audience = {};
   audience[station] = {
@@ -98,7 +109,7 @@ function sendPost() {
 }
 
 (function bindGrams() {
-  var path = '/f/public/0';                             // f = grams. fetch all messages of station.
+  var path = '/f/' + mainStation(window.urb.user) + '/0';                             // f = grams. fetch all messages of station.
 
   return window.urb.bind(
     path,
