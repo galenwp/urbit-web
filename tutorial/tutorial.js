@@ -16,29 +16,6 @@ function uuid32() {                                     // generate unique seria
 
 // helpers
 
-function loadCabal(cabal) {
-  var ship;
-  var station;
-
-  window.stationConfig = cabal.loc;
-
-  if (!(window.location.search)) {
-    ship = window.urb.user;
-  } else {
-    ship = window.location.search.substring(7);
-  }
-  station = '~' + ship + '/public';                     // load all grams (messages) at station path.
-
-  if (ship === window.urb.user && !(window.location.search)) {
-    return document.getElementById('postBox').classList.remove('hidden');
-  }
-
-  if (cabal.loc.sources.includes(station)) {
-    return document.getElementById('unsubscribeButton').classList.remove('hidden');
-  }
-  return document.getElementById('subscribeButton').classList.remove('hidden');
-}
-
 function loadGrams(grams) {
   var oldPosts = document.getElementById('posts').innerHTML;
   var newPosts = '';
@@ -120,158 +97,15 @@ function sendPost() {
   });
 }
 
-function subscribe() {
-  var design;
-  var ship = window.location.search.substring(7);
-  var station = '~' + ship + '/public';
+(function bindGrams() {
+  var path = '/f/public/0';                             // f = grams. fetch all messages of station.
 
-  document.getElementById('subscribeButton').disabled = true;
-
-  if (window.stationConfig.sources.includes(station)) {
-    return;
-  }
-
-  window.stationConfig.sources.push(station);           // add station to sources.
-
-  design = {
-    design: {
-      party: 'feed',
-      config: window.stationConfig
-    }
-  };
-
-  window.urb.send(design, {
-    appl: 'talk',
-    mark: 'talk-command',
-    ship: window.urb.user
-  },
-  function subscribed(error, response) {
-    if (error || !response.data || response.fail) {
-      console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
-      console.warn(design);
-      console.warn('failed. Error:');
-      console.warn(error);
-      console.warn(response);
-      return;
-    }
-    console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
-    console.log(design);
-    console.log('succeeded! Response:');
-    console.log(response.data);
-    location.reload();
-  });
-}
-
-function unsubscribe() {
-  var design;
-  var ship = window.location.search.substring(7);
-  var station = '~' + ship + '/public';
-
-  document.getElementById('unsubscribeButton').disabled = true;
-
-  if (!(window.stationConfig.sources.includes(station))) {
-    return;
-  }
-
-  if (window.stationConfig.sources.indexOf(station) > -1) { // remove station from sources
-    window.stationConfig.sources.splice(
-      window.stationConfig.sources.indexOf(station),
-      1
-    );
-  }
-
-  design = {
-    design: {
-      party: 'feed',
-      config: window.stationConfig
-    }
-  };
-
-  window.urb.send(design, {
-    appl: 'talk',
-    mark: 'talk-command',
-    ship: window.urb.user
-  },
-  function unsubscribed(error, response) {
-    if (error || !response.data || response.fail) {
-      console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
-      console.warn(design);
-      console.warn('failed. Error:');
-      console.warn(error);
-      console.warn(response);
-      return;
-    }
-    console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
-    console.log(design);
-    console.log('succeeded! Response:');
-    console.log(response.data);
-    location.reload();
-  });
-}
-
-function fetch() {
-  var ship = document.getElementById('fetchBox').value;
-  if (!(ship.charAt(0) === '~')) {
-                                                        // TODO: less intrusive error message
-                                                        // eslint-disable-next-line no-alert
-    alert('Not a valid station. A valid station is ~ship/station.');
-    return;
-  }
-
-  ship = ship.substr(1);
-
-
-  window.location.href =
-    window.location.protocol + '//' +
-    window.location.host +
-    window.location.pathname +
-    '?ship=~' + ship;
-}
-
-// onLoad
-
-(function bindCabal() {                                 // load user feed station metadata
-  var path = '/x/feed';                                 // x = cabal. full bind-station path.
   return window.urb.bind(
     path,
     {
       appl: 'talk',
       mark: 'json',
       ship: window.urb.user
-    },
-    function gotCabal(error, response) {
-      if (error || !response.data || response.fail) {
-        console.warn('urb.bind at path `' + path + '` failed. Error: ');
-        console.warn(error);
-        console.warn(response);
-        return;
-      }
-      console.log('urb.bind at path: `' + path + '` succeeded! Response data: ');
-      console.log(response.data);
-      loadCabal(response.data.cabal);
-    });
-}());
-
-(function bindGrams() {
-  var path;
-  var ship;
-  var station;
-
-  if (!(window.location.search)) {
-    ship = window.urb.user;
-    station = 'feed';
-  } else {
-    ship = window.location.search.substring(7);
-    station = 'public';
-  }
-  path = '/f/' + station + '/0';                        // f = grams. fetch all messages of station.
-
-  return window.urb.bind(
-    path,
-    {
-      appl: 'talk',
-      mark: 'json',
-      ship: ship
     },
     function gotGrams(error, response) {
       if (error || !response.data || response.fail) {
@@ -289,7 +123,4 @@ function fetch() {
 window.module = window.module || {};                    // eslint-disable-line no-global-assign
 module.exports = {
   sendPost: sendPost,
-  subscribe: subscribe,
-  unsubscribe: unsubscribe,
-  fetch: fetch
 };
