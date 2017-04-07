@@ -11,12 +11,8 @@
 
 <body>
 
-  <div id="loading">
-    Loading...
-  </div>
-
   <div>
-      <h1 id="shipDisplay" class="ship-display"></h1>
+      <h1 id="shipDisplay"></h1>
       <br />
   </div>
 
@@ -61,18 +57,6 @@
     } else {
       document.getElementById('shipDisplay').innerHTML = '~' + window.location.search.substring(7); // XX
     }
-
-    document.getElementById('fetchBox').addEventListener('keyup', function fetchOnEnter(event) {
-      if (!event) { event = window.event; }
-      event.preventDefault();
-      if (event.keyCode === 13) { fetch(); }
-    }, false);
-    document.getElementById('postBox').addEventListener('keyup', function postOnEnter(event) {
-      if (!event) { event = window.event; }
-      event.preventDefault();
-      if (event.keyCode === 13) { sendPost(); }
-    }, false);
-    document.getElementById('loading').classList.remove('hidden');
   </script>
 
 
