@@ -25,24 +25,6 @@ function uuid32() {                                     // generate unique seria
   return serial.slice(0, -1);
 }
 
-// helpers
-
-function loadGrams(grams) {
-  var oldPosts = document.getElementById('posts').innerHTML;
-  var newPosts = '';
-  grams.tele.slice().reverse().forEach(function showGram(gram) { // grams are array; display new 1st
-    var textDiv = document.createElement('div');
-    textDiv.innerText = gram.thought.statement.speech.lin.txt;
-    newPosts += '<div class="post">';
-    newPosts += '<h2 class="ship-display">~' + gram.ship + '</h2>';
-    newPosts += '<h3>' + new Date(gram.thought.statement.date) + '</h3>';
-    newPosts += textDiv.innerHTML;
-    newPosts += '</div>';
-  });
-  document.getElementById('posts').innerHTML = newPosts + oldPosts; // newest first.
-  document.getElementById('postButton').disabled = false;
-}
-
 // main
 
 function sendPost() {
@@ -105,33 +87,11 @@ function sendPost() {
     console.log(post);
     console.log('succeeded! Response:');
     console.log(response.data);
+    document.getElementById('postButton').disabled = false;
   });
 }
 
-(function bindGrams() {
-  var path = '/f/' + mainStation(window.urb.user) + '/0';                             // f = grams. fetch all messages of station.
-
-  return window.urb.bind(
-    path,
-    {
-      appl: 'talk',
-      mark: 'json',
-      ship: window.urb.user
-    },
-    function gotGrams(error, response) {
-      if (error || !response.data || response.fail) {
-        console.warn('urb.bind at path `' + path + '` failed. Error: ');
-        console.warn(error);
-        console.warn(response);
-        return;
-      }
-      console.log('urb.bind at path: `' + path + '` succeeded! Response data: ');
-      console.log(response.data);
-      loadGrams(response.data.grams);
-    });
-}());
-
 window.module = window.module || {};                    // eslint-disable-line no-global-assign
 module.exports = {
-  sendPost: sendPost,
+  sendPost: sendPost
 };
