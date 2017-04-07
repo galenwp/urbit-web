@@ -27,27 +27,29 @@ function loadCabal(cabal) {
   } else {
     ship = window.location.search.substring(7);
   }
-  station = '~' + ship + '/public';                     // load all grams (messages) at station path.
+  station = '~' + ship + '/public';
 
   if (ship === window.urb.user && !(window.location.search)) {
-    return document.getElementById('postBox').classList.remove('hidden');
+    document.getElementById('postBox').classList.remove('hidden');
+    document.getElementById('postButton').classList.remove('hidden');
+    return;
   }
 
   if (cabal.loc.sources.includes(station)) {
-    return document.getElementById('unsubscribeButton').classList.remove('hidden');
+    document.getElementById('unsubscribeButton').classList.remove('hidden');
+  } else {
+    document.getElementById('subscribeButton').classList.remove('hidden');
   }
-  return document.getElementById('subscribeButton').classList.remove('hidden');
 }
 
 function loadGrams(grams) {
   var oldPosts = document.getElementById('posts').innerHTML;
   var newPosts = '';
-  document.getElementById('loading').classList.add('hidden');
   grams.tele.slice().reverse().forEach(function showGram(gram) { // grams are array; display new 1st
     var textDiv = document.createElement('div');
     textDiv.innerText = gram.thought.statement.speech.lin.txt;
-    newPosts += '<div class="post">';
-    newPosts += '<h2 class="ship-display">~' + gram.ship + '</h2>';
+    newPosts += '<div id="' + gram.thought.serial + '">';
+    newPosts += '<h2>~' + gram.ship + '</h2>';
     newPosts += '<h3>' + new Date(gram.thought.statement.date) + '</h3>';
     newPosts += textDiv.innerHTML;
     newPosts += '</div>';
@@ -100,25 +102,27 @@ function sendPost() {
   post = {};
   post.publish = [thought];
 
-  return window.urb.send(post, {
-    appl: 'talk',
-    mark: 'talk-command',
-    ship: window.urb.user
-  },
-  function sentMessage(error, response) {
-    if (error || !response.data || response.fail) {
-      console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
-      console.warn(post);
-      console.warn('failed. Error:');
-      console.warn(error);
-      console.warn(response);
-      return;
-    }
-    console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
-    console.log(post);
-    console.log('succeeded! Response:');
-    console.log(response.data);
-  });
+  return window.urb.send(
+    post,                                               // data
+    {                                                   // params
+      appl: 'talk',
+      mark: 'talk-command',
+      ship: window.urb.user
+    },
+    function sentMessage(error, response) {             // callback
+      if (error || !response.data || response.fail) {
+        console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
+        console.warn(post);
+        console.warn('failed. Error:');
+        console.warn(error);
+        console.warn(response);
+        return;
+      }
+      console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
+      console.log(post);
+      console.log('succeeded! Response:');
+      console.log(response.data);
+    });
 }
 
 function subscribe() {
@@ -141,26 +145,28 @@ function subscribe() {
     }
   };
 
-  window.urb.send(design, {
-    appl: 'talk',
-    mark: 'talk-command',
-    ship: window.urb.user
-  },
-  function subscribed(error, response) {
-    if (error || !response.data || response.fail) {
-      console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
-      console.warn(design);
-      console.warn('failed. Error:');
-      console.warn(error);
-      console.warn(response);
-      return;
-    }
-    console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
-    console.log(design);
-    console.log('succeeded! Response:');
-    console.log(response.data);
-    location.reload();
-  });
+  window.urb.send(
+    design,                                             // data
+    {                                                   // params
+      appl: 'talk',
+      mark: 'talk-command',
+      ship: window.urb.user
+    },
+    function subscribed(error, response) {              // callback
+      if (error || !response.data || response.fail) {
+        console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
+        console.warn(design);
+        console.warn('failed. Error:');
+        console.warn(error);
+        console.warn(response);
+        return;
+      }
+      console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
+      console.log(design);
+      console.log('succeeded! Response:');
+      console.log(response.data);
+      location.reload();
+    });
 }
 
 function unsubscribe() {
@@ -188,26 +194,28 @@ function unsubscribe() {
     }
   };
 
-  window.urb.send(design, {
-    appl: 'talk',
-    mark: 'talk-command',
-    ship: window.urb.user
-  },
-  function unsubscribed(error, response) {
-    if (error || !response.data || response.fail) {
-      console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
-      console.warn(design);
-      console.warn('failed. Error:');
-      console.warn(error);
-      console.warn(response);
-      return;
-    }
-    console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
-    console.log(design);
-    console.log('succeeded! Response:');
-    console.log(response.data);
-    location.reload();
-  });
+  window.urb.send(
+    design,                                             // data
+    {                                                   // params
+      appl: 'talk',
+      mark: 'talk-command',
+      ship: window.urb.user
+    },
+    function unsubscribed(error, response) {            // callback
+      if (error || !response.data || response.fail) {
+        console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
+        console.warn(design);
+        console.warn('failed. Error:');
+        console.warn(error);
+        console.warn(response);
+        return;
+      }
+      console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
+      console.log(design);
+      console.log('succeeded! Response:');
+      console.log(response.data);
+      location.reload();
+    });
 }
 
 function fetch() {
@@ -234,13 +242,13 @@ function fetch() {
 (function bindCabal() {                                 // load user feed station metadata
   var path = '/x/feed';                                 // x = cabal. full bind-station path.
   return window.urb.bind(
-    path,
-    {
+    path,                                               // path
+    {                                                   // params
       appl: 'talk',
       mark: 'json',
       ship: window.urb.user
     },
-    function gotCabal(error, response) {
+    function gotCabal(error, response) {                // callback
       if (error || !response.data || response.fail) {
         console.warn('urb.bind at path `' + path + '` failed. Error: ');
         console.warn(error);
@@ -268,13 +276,13 @@ function fetch() {
   path = '/f/' + station + '/0';                        // f = grams. fetch all messages of station.
 
   return window.urb.bind(
-    path,
-    {
+    path,                                               // path
+    {                                                   // params
       appl: 'talk',
       mark: 'json',
       ship: ship
     },
-    function gotGrams(error, response) {
+    function gotGrams(error, response) {                // callback
       if (error || !response.data || response.fail) {
         console.warn('urb.bind at path `' + path + '` failed. Error: ');
         console.warn(error);
