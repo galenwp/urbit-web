@@ -1,35 +1,12 @@
 /* eslint-disable no-console */
 
-function sayHi() {
-  var data = 'hi. :)';
+console.log("We're serving some JavaScript through Urbit to the browser.");
 
-  document.getElementById('hiButton').disabled = true;
-
-  return window.urb.send(data, {
-    appl: 'hood',
-    mark: 'helm-hi',
-    ship: window.urb.user
-  },
-  function sentMessage(error, response) {
-    if (error || !response.data || response.fail) {
-      console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
-      console.warn(data);
-      console.warn('failed. Error:');
-      console.warn(error);
-      console.warn(response);
-      return;
-    }
-    console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
-    console.log(data);
-    console.log('succeeded! Response:');
-    console.log(response.data);
-    document.getElementById('response').innerHTML = '<code>' + JSON.stringify(response.data) + '</code>';
-    document.getElementById('shipHi').innerHTML = '<code>~' + window.urb.user + '</code> says hi back!';
-    document.getElementById('hiButton').disabled = false;
-  });
+function someJavaScript() {                             // test
+  console.log("Now we're calling some other JavaScript.");
 }
 
 window.module = window.module || {};                    // eslint-disable-line no-global-assign
 module.exports = {
-  sayHi: sayHi
+  someJavaScript: someJavaScript
 };
