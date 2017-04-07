@@ -2,6 +2,17 @@
 
 // util
 
+function mainStation(user) {
+  switch (user.length) {
+    case 3:
+      return 'court';
+    case 6:
+      return 'floor';
+    default:
+      return 'porch';
+  }
+}
+
 function uuid32() {                                     // generate unique serial number
   var i;
   var digitGroup;
@@ -22,8 +33,8 @@ function loadGrams(grams) {
   grams.tele.slice().reverse().forEach(function showGram(gram) { // grams are array; display new 1st
     var textDiv = document.createElement('div');
     textDiv.innerText = gram.thought.statement.speech.lin.txt;
-    newPosts += '<div class="post">';
-    newPosts += '<h2 class="ship-display">~' + gram.ship + '</h2>';
+    newPosts += '<div id="' + gram.thought.serial + '">';
+    newPosts += '<h2>~' + gram.ship + '</h2>';
     newPosts += '<h3>' + new Date(gram.thought.statement.date) + '</h3>';
     newPosts += textDiv.innerHTML;
     newPosts += '</div>';
@@ -45,7 +56,7 @@ function sendPost() {
   document.getElementById('postButton').disabled = true;
 
   text = document.getElementById('postBox').value;
-  station = '~' + window.urb.user + '/public';
+  station = '~' + window.urb.user + '/' + mainStation(window.urb.user);
 
   audience = {};
   audience[station] = {
@@ -76,38 +87,40 @@ function sendPost() {
   post = {};
   post.publish = [thought];
 
-  return window.urb.send(post, {
-    appl: 'talk',
-    mark: 'talk-command',
-    ship: window.urb.user
-  },
-  function sentMessage(error, response) {
-    if (error || !response.data || response.fail) {
-      console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
-      console.warn(post);
-      console.warn('failed. Error:');
-      console.warn(error);
-      console.warn(response);
-      return;
-    }
-    console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
-    console.log(post);
-    console.log('succeeded! Response:');
-    console.log(response.data);
-  });
+  return window.urb.send(
+    post,                                               // data
+    {                                                   // params
+      appl: 'talk',
+      mark: 'talk-command',
+      ship: window.urb.user
+    },
+    function sentMessage(error, response) {             // callback
+      if (error || !response.data || response.fail) {
+        console.warn('`urb.send` to ~' + window.urb.user + ' the data payload:');
+        console.warn(post);
+        console.warn('failed. Error:');
+        console.warn(error);
+        console.warn(response);
+        return;
+      }
+      console.log('`urb.send` to ~' + window.urb.user + ' the data payload:');
+      console.log(post);
+      console.log('succeeded! Response:');
+      console.log(response.data);
+    });
 }
 
 (function bindGrams() {
-  var path = '/f/public/0';                             // f = grams. fetch all messages of station.
+  var path = '/f/' + mainStation(window.urb.user) + '/0';                             // f = grams. fetch all messages of station.
 
   return window.urb.bind(
-    path,
-    {
+    path,                                               // path
+    {                                                   // params
       appl: 'talk',
       mark: 'json',
       ship: window.urb.user
     },
-    function gotGrams(error, response) {
+    function gotGrams(error, response) {                // callback
       if (error || !response.data || response.fail) {
         console.warn('urb.bind at path `' + path + '` failed. Error: ');
         console.warn(error);
