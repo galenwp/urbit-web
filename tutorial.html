@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Urbit from the Web</title>
+
+    <link href="/~~/=home=/web/tutorial/tutorial.css" rel="stylesheet" />
+    <script src="/~~/~/at/=home=/web/lib/js/urb.js"></script>
+    <script src="/~~/=home=/web/tutorial/tutorial.js"></script>
+  </head>
+
+  <body>
+    <div id="loading">
+      Loading...
+    </div>
+
+    <div>
+      <h1 id="shipDisplay" class="ship-display"></h1>
+    </div>
+    <br />
+
+    <div>
+      <input type="text" id="fetchBox" size="80" placeholder="~tonlur-sarret">Fetch
+      <br />
+      <button onclick='fetch();'>Fetch</button>
+    </div>
+    <br />
+
+    <div>
+      <button id="subscribeButton" class="hidden" onclick='subscribe();'>Subscribe</button>
+    </div>
+    <br />
+
+    <div>
+      <button id="unsubscribeButton" class="hidden" onclick='unsubscribe();'>Unsubscribe</button>
+    </div>
+    <br />
+
+    <div>
+      <input id="postBox" class="hidden" type="text" size="80" value="">Text
+      <br />
+      <button id="postButton" class="hidden" onclick='sendPost();'>Post</button>
+    </div>
+    <br />
+
+    <div id="posts">
+    </div>
+
+    <script>
+      if (!(window.location.search)) {
+        document.getElementById('shipDisplay').innerHTML = '~' + window.urb.user;
+      } else {
+        document.getElementById('shipDisplay').innerHTML = '~' + window.location.search.substring(7); // XX
+      }
+
+      document.getElementById('fetchBox').addEventListener('keyup', function fetchOnEnter(event) {
+        if (!event) { event = window.event; }
+        event.preventDefault();
+        if (event.keyCode === 13) { fetch(); }
+      }, false);
+      document.getElementById('postBox').addEventListener('keyup', function postOnEnter(event) {
+        if (!event) { event = window.event; }
+        event.preventDefault();
+        if (event.keyCode === 13) { sendPost(); }
+      }, false);
+      document.getElementById('loading').classList.remove('hidden');
+    </script>
+  </body>
+</html>
